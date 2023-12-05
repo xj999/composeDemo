@@ -44,9 +44,6 @@ fun MyComposeScreen() {
         modifier = Modifier
             .fillMaxWidth()
     ) {
-//        ItemRow(text = "我的单位", iconRes = R.drawable.ic_my_company_2, showIcon = false) {
-//            // 处理点击事件
-//        }
 
 
         val list = mutableListOf<AppData>()
@@ -55,39 +52,15 @@ fun MyComposeScreen() {
             list.add(AppData("公文流转", 2, "https://www.pokemon.cn/play/resources/pokedex/img/pm/d0ee81f16175c97770192fb691fdda8da1f4f349.png",2))
             list.add(AppData("审批", 2, "https://www.pokemon.cn/play/resources/pokedex/img/pm/5794f0251b1180998d72d1f8568239620ff5279c.png",3))
             list.add(AppData("请假系统", 2, "https://www.pokemon.cn/play/resources/pokedex/img/pm/2b3f6ff00db7a1efae21d85cfb8995eaff2da8d8.png",4))
-
         }
             AppGrid(list)
-
-//        ItemRow("绑定手机", R.drawable.ic_modify_phone, true) {
-//            //todo click action
-//        }
-//        ItemRow("修改密码", R.drawable.icon_mine_item_2, false) {
-//            //todo click action
-//        }
-//        ItemRow("绑定微信", R.drawable.ic_icon_weixin, true) {
-//            //todo click action
-//        }
-//        ItemRow("班级管理", R.drawable.ic_icon_banjiguanli, true) {
-//            //todo click action
-//        }
-//        ItemRow("常用连接", R.drawable.link_icon, true) {
-//            //todo click action
-//        }
-//        ItemRow("应用分享", R.drawable.icon_share, true) {
-//            //todo click action
-//        }
-//        ItemRow("设置", R.drawable.icon_mine_item_6, true) {
-//            //todo click action
-//        }
-//    }
     }
 }
 
 @Preview(showBackground = false)
 @Composable
 fun GreetingPreview() {
-    MyApplicationTheme(darkTheme = false) {
+    MyApplicationTheme(darkTheme = true) {
         MyComposeScreen()
     }
 }

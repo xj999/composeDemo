@@ -43,9 +43,9 @@ fun App(app: AppData) {
 
 @Composable
 fun AppGrid(apps: List<AppData>) {
-    var apps by remember { mutableStateOf(apps) } // 将传入的apps赋值给局部的apps
+    val appList by remember { mutableStateOf(apps) }
 
-    val groupedApps = apps.groupBy { it.appType }
+    val groupedApps = appList.groupBy { it.appType }
 
     LazyVerticalGrid(
         columns = GridCells.Fixed(4)
