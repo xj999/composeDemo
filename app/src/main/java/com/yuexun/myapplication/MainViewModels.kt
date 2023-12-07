@@ -29,12 +29,14 @@ class MainViewModels @Inject constructor(
     private val myApps = mutableStateOf(listOf<CommonApp>())
 
     private val tenantName = mutableStateOf("")
+
+    private val expanded = mutableStateOf(false)
+
     private val mk = MMKV.defaultMMKV()
 
 
     @Composable
     override fun uiState(): HomeState {
-        Timber.e("=-------------------------------")
         LaunchedEffect(Unit) {
             start()
         }
@@ -46,7 +48,7 @@ class MainViewModels @Inject constructor(
             listOf("1", "2"),
             listOf("3", "4"),
             listOf("5", "6"),
-            false
+            expanded=expanded.value
         )
 
     }
