@@ -1,7 +1,7 @@
 package com.yuexun.myapplication.di
 
-import com.yuexun.myapplication.data.TaskRepository
-import com.yuexun.myapplication.data.TaskRepositoryImpl
+import com.yuexun.myapplication.data.HybridAppRepository
+import com.yuexun.myapplication.data.HybridAppRepositoryImpl
 import com.yuexun.myapplication.data.db.AppDatabase
 import dagger.Module
 import dagger.Provides
@@ -15,7 +15,7 @@ object RepositoryModule {
 
     @Provides
     @Singleton
-    fun provideTaskRepository(appDatabase: AppDatabase): TaskRepository {
-        return TaskRepositoryImpl(appDatabase)
+    fun provideTaskRepository(appDatabase: AppDatabase): HybridAppRepository {
+        return HybridAppRepositoryImpl(appDatabase)
     }
 }

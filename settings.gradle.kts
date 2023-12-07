@@ -1,7 +1,10 @@
 pluginManagement {
     repositories {
-        maven{
-            setUrl("https://repo.huaweicloud.com/repository/maven/")
+        maven {
+            url =uri("https://maven.aliyun.com/repository/public/")
+        }
+        maven {
+            url =uri("https://maven.aliyun.com/repository/central")
         }
         google()
         mavenCentral()
@@ -11,8 +14,11 @@ pluginManagement {
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
-        maven{
-            setUrl("https://repo.huaweicloud.com/repository/maven/")
+        maven {
+            url =uri("https://maven.aliyun.com/repository/public/")
+        }
+        maven {
+            url =uri("https://maven.aliyun.com/repository/central")
         }
         google()
         mavenCentral()

@@ -17,15 +17,24 @@
 package com.yuexun.myapplication.data
 
 import com.yuexun.myapplication.data.db.entity.CommonApp
+import com.yuexun.myapplication.data.db.entity.HybridApp
+import com.yuexun.myapplication.data.db.entity.TagApp
 import kotlinx.coroutines.flow.Flow
 
-interface TaskRepository {
+interface HybridAppRepository {
 
-    fun getAllLocalCommonApps(): Flow<List<CommonApp>>
     fun getAllCommonApps(): Flow<List<CommonApp>>
+
+    fun getAllHybridApps(): Flow<List<HybridApp>>
+
 
     suspend fun saveOrUpdateCommonApps(list: List<CommonApp>)
 
-    suspend fun saveData(app: CommonApp)
+    suspend fun saveMyAPP(app: CommonApp)
+
+
+    suspend fun saveTagList(list: List<TagApp>)
+
+    suspend fun saveHybridApp(list: List<HybridApp>)
 
 }

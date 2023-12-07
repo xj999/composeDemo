@@ -1,9 +1,7 @@
 package com.yuexun.myapplication.app
 
 import android.app.Application
-import android.content.Context
-import androidx.room.Room
-import com.yuexun.myapplication.data.db.AppDatabase
+import com.tencent.mmkv.MMKV
 import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 import timber.log.Timber.DebugTree
@@ -14,6 +12,7 @@ class LApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
+         MMKV.initialize(this)
         Timber.plant(object : DebugTree() {
             override fun isLoggable(tag: String?, priority: Int): Boolean {
                 return BuildConfigProcessor.DEBUG

@@ -35,10 +35,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MyApplicationTheme(darkTheme = false) {
-                // A surface container using the 'background' color from the theme
-
-                val uiState by remember { mutableStateOf(homePageView.uiState) }
-                HomeScreen(uiState, onBufferClick = {homePageView.addData()})
+                HomeScreen(homePageView.uiState(), homePageView::onEvent)
             }
         }
 

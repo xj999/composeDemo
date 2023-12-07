@@ -101,4 +101,7 @@ dependencies {
     ksp("com.google.dagger:hilt-android-compiler:2.48.1")
     implementation("com.squareup.moshi:moshi-kotlin:1.14.0")
     implementation("com.google.code.gson:gson:2.10.1")
+    implementation ("com.tencent:mmkv:1.3.2")
+    implementation ("com.github.javafaker:javafaker:1.0.2")
+
 }

@@ -68,11 +68,7 @@ fun HybridAppUi(app: HybridApp) {
 }
 
 @Composable
-fun HomeScreen(homeState: HomeState, onBufferClick: () -> Unit, modifier: Modifier = Modifier) {
-    val app by rememberUpdatedState(newValue = homeState.myApp.collectAsState().value)
-    val tenantName by remember {
-        mutableStateOf(homeState.tenantName)
-    }
+fun HomeScreen(homeState: HomeState, onEvent: (HomeEvent) -> Unit, modifier: Modifier = Modifier) {
     Box(
         modifier = Modifier
             .background(LColors.Purple.extraLight)
@@ -80,20 +76,22 @@ fun HomeScreen(homeState: HomeState, onBufferClick: () -> Unit, modifier: Modifi
             .fillMaxWidth()
     )
     {
-        AppGrid(app)
+        AppGrid(homeState.myApp)
         ElevatedButton(
-            onClick = onBufferClick, modifier = Modifier
+            onClick = { onEvent(HomeEvent.OnNameBtnClick) }, modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(16.dp)
                 .wrapContentWidth()
                 .wrapContentHeight()
         )
 
-        Text(text = tenantName,modifier = Modifier
-            .align(Alignment.TopStart)
-            .padding(16.dp)
-            .wrapContentWidth()
-            .wrapContentHeight())
+        Text(
+            text = homeState.tenantName, modifier = Modifier
+                .align(Alignment.TopStart)
+                .padding(16.dp)
+                .wrapContentWidth()
+                .wrapContentHeight()
+        )
     }
 
 }
@@ -101,7 +99,7 @@ fun HomeScreen(homeState: HomeState, onBufferClick: () -> Unit, modifier: Modifi
 @Composable
 fun ElevatedButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
     ElevatedButton(onClick = { onClick() }, modifier) {
-        Text("change tenantName")
+        Text("change Title")
     }
 }
 
@@ -110,7 +108,7 @@ fun AppGrid(apps: List<CommonApp>) {
     val groupedApps = apps.groupBy { it.tagId }
     LazyVerticalGrid(
         columns = GridCells.Fixed(4),
-        modifier = Modifier.padding(0.dp,30.dp,0.dp,0.dp)
+        modifier = Modifier.padding(0.dp, 30.dp, 0.dp, 0.dp)
     ) {
         groupedApps.forEach { (category, appList) ->
             item(span = { GridItemSpan(maxLineSpan) }) {
