@@ -10,11 +10,6 @@ import com.tencent.mmkv.MMKV
 import com.yuexun.myapplication.app.ComposeViewModel
 import com.yuexun.myapplication.app.Constants.APP_SWITCH
 import com.yuexun.myapplication.app.Constants.TENANT_NAME
-import com.yuexun.myapplication.data.HybridAppRepository
-import com.yuexun.myapplication.data.db.entity.CommonApp
-import com.yuexun.myapplication.data.db.entity.HybridApp
-import com.yuexun.myapplication.data.db.entity.TagWithHybridAppList
-import com.yuexun.myapplication.data.db.entity.generateTestData
 import com.yuexun.myapplication.ui.composable.HomeEvent
 import com.yuexun.myapplication.ui.composable.HomeState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,12 +22,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModels @Inject constructor(
-    private val hybridAppRepository: HybridAppRepository
+    private val hybridAppRepository: com.midai.data.HybridAppRepository
 ) : ComposeViewModel<HomeState, HomeEvent>() {
 
-    private val myApps = mutableStateOf(listOf<CommonApp>())
+    private val myApps = mutableStateOf(listOf<com.midai.data.db.entity.CommonApp>())
 
-    private val hybridApps = mutableStateOf(listOf<TagWithHybridAppList>())
+    private val hybridApps = mutableStateOf(listOf<com.midai.data.db.entity.TagWithHybridAppList>())
 
     private val tenantName = mutableStateOf("")
 
@@ -67,7 +62,7 @@ class MainViewModels @Inject constructor(
                 tenantName.value = "测试名称" + current.second
                 mk.putString(TENANT_NAME, tenantName.value)
                 viewModelScope.launch {
-                    hybridAppRepository.saveMyAPP(generateTestData())
+                    hybridAppRepository.saveMyAPP(com.midai.data.db.entity.generateTestData())
                 }
             }
             is HomeEvent.OnAppSwitchClick -> {
@@ -83,12 +78,12 @@ class MainViewModels @Inject constructor(
 
     private fun start() {
         viewModelScope.launch() {
-           hybridAppRepository.fetchAppData()
+           hybridAppRepository.fetchRemoteAppData()
 
             tenantName.value = mk.getString(TENANT_NAME, "testCompany").toString()
             expanded.value = mk.getBoolean(APP_SWITCH, false)
 
-            val commonAppsFlow = hybridAppRepository.getAllCommonApps()
+            val commonAppsFlow = hybridAppRepository.getLocalMyApps()
             val hybridAppsFlow = hybridAppRepository.getAllTagWithHybridApps()
 
             combine(commonAppsFlow, hybridAppsFlow) { commonApps, hybrid ->

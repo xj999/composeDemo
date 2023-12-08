@@ -1,0 +1,190 @@
+[versions]
+glide = "1.0.0-beta01"
+gson = "2.10.1"
+javafaker = "1.0.2"
+kotlin = "1.9.10"
+kotlin-coroutines = "1.7.3"
+mmkv = "1.3.2"
+okhttp = "4.12.0"
+arrow = "1.2.1"
+kotest = "5.7.2"
+compose = "1.5.4"
+# https://developer.android.com/jetpack/androidx/releases/compose-kotlin
+compose-compiler = "1.5.3" # It's used! Use compatible with Kotlin one
+compose-material3 = "1.1.2"
+glance = "1.0.0"
+hilt = "2.48.1"
+room = "2.6.0"
+kotlinx-collections = "0.3.6"
+retrofit="2.9.0"
+# Android
+min-sdk = "28"
+compile-sdk = "34"
+version-name = "4.5.0"
+version-code = "150"
+
+
+# Linters
+detekt = "1.23.1" # https://detekt.dev/docs/gettingstarted/gradle/
+
+[libraries]
+android-gradle-plugin = { module = "com.android.tools.build:gradle", version = "8.1.4" }
+
+# Kotlin
+glide = { module = "com.github.bumptech.glide:compose", version.ref = "glide" }
+gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
+javafaker = { module = "com.github.javafaker:javafaker", version.ref = "javafaker" }
+kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
+kotlin-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlin-coroutines" }
+kotlin-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlin-coroutines" }
+kotlin-coroutines-googleplay-temp = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services", version.ref = "kotlin-coroutines" }
+kotlinx-collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "kotlinx-collections" }
+
+# KotlinX Serialization
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version = "1.6.0" }
+kotlinx-serialization-plugin = { module = "org.jetbrains.kotlin:kotlin-serialization", version.ref = "kotlin" }
+
+#okhttp
+mmkv = { module = "com.tencent:mmkv", version.ref = "mmkv" }
+okhttp={module="com.squareup.okhttp3:okhttp",version.ref="okhttp"}
+okhttp-logging-interceptor={module="com.squareup.okhttp3:logging-interceptor",version.ref="okhttp"}
+
+# Arrow
+arrowkt-core = { module = "io.arrow-kt:arrow-core", version.ref = "arrow" }
+
+# Testing
+mockk = { module = "io.mockk:mockk", version = "1.13.8" }
+kotest-junit5 = { module = "io.kotest:kotest-runner-junit5", version.ref = "kotest" }
+kotest-assertions = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest" }
+kotest-property = { module = "io.kotest:kotest-property", version.ref = "kotest" }
+kotest-property-arrow = { module = "io.kotest.extensions:kotest-property-arrow", version.ref = "arrow" }
+kotest-assertions-arrow = { module = "io.kotest.extensions:kotest-assertions-arrow", version.ref = "arrow" }
+kotest-datatest = { module = "io.kotest:kotest-framework-datatest", version.ref = "kotest" }
+kotlin-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlin-coroutines" }
+cashapp-molecule-plugin = { module = "app.cash.molecule:molecule-gradle-plugin", version = "1.2.1" }
+cashapp-turbine = { module = "app.cash.turbine:turbine", version = "1.0.0" }
+
+# Compose
+compose-animation = { module = "androidx.compose.animation:animation", version.ref = "compose" }
+compose-foundation = { module = "androidx.compose.foundation:foundation", version.ref = "compose" }
+compose-material3 = { module = "androidx.compose.material3:material3", version.ref = "compose-material3" }
+compose-material3-windowsize = { module = "androidx.compose.material3:material3-window-size-class", version.ref = "compose-material3" }
+compose-runtime = { module = "androidx.compose.runtime:runtime", version.ref = "compose" }
+compose-runtime-livedate-temp = { module = "androidx.compose.runtime:runtime-livedata", version.ref = "compose" }
+compose-ui = { module = "androidx.compose.ui:ui", version.ref = "compose" }
+compose-activity = { module = "androidx.activity:activity-compose", version = "1.8.0" }
+compose-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version = "2.6.2" }
+compose-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "compose" }
+compose-coil = { module = "io.coil-kt:coil-compose", version = "2.4.0" }
+glance = { module = "androidx.glance:glance", version.ref = "glance" }
+glance-appwidget = { module = "androidx.glance:glance-appwidget", version.ref = "glance" }
+glance-material3 = { module = "androidx.glance:glance-material3", version.ref = "glance" }
+
+# Local persistence
+datastore = { module = "androidx.datastore:datastore-preferences", version = "1.0.0" }
+retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
+room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
+room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
+
+# Hilt
+hilt = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
+hilt-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt" }
+hilt-gradle-plugin = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "hilt" }
+
+
+# AndroidX
+androidx-security = { module = "androidx.security:security-crypto", version = "1.0.0" }
+androidx-biometrics = { module = "androidx.biometric:biometric", version = "1.2.0-alpha05" }
+androidx-activity = { module = "androidx.activity:activity-ktx", version = "1.8.0" }
+appcompat-activity = { module = "androidx.appcompat:appcompat", version = "1.7.0-alpha03" }
+androidx-recyclerview = { module = "androidx.recyclerview:recyclerview", version = "1.3.2" }
+
+# Material
+material = { module = "com.google.android.material:material", version = "1.10.0" }
+
+# Logging
+timber = { module = "com.jakewharton.timber:timber", version = "5.0.1" }
+
+# Legacy
+keval = { module = "com.notkamui.libs:keval", version = "0.9.0" }
+opencsv-csv = { module = "com.opencsv:opencsv", version = "5.8" }
+opencsv-apache-commons = { module = "org.apache.commons:commons-lang3", version = "3.13.0" }
+
+# Linters
+detekt-gradle-plugin = { module = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin", version.ref = "detekt" }
+detekt-ruleset-compiler = { module = "com.braisgabin.detekt:kotlin-compiler-wrapper", version = "0.0.4" }
+detekt-ruleset-ktlint = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detekt" }
+detekt-ruleset-compose = { module = "io.nlopez.compose.rules:detekt", version = "0.3.0" }
+slack-lint-compose = { module = "com.slack.lint.compose:compose-lint-checks", version = "1.2.0" }
+
+# KSP
+ksp-plugin = { module = "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin", version = "1.9.10-1.0.13" }
+
+[bundles]
+kotlin = [
+    "kotlin-stdlib",
+    "kotlin-coroutines-core",
+    "kotlinx-collections-immutable"
+]
+kotlin-android = [
+    "kotlin-coroutines-android",
+    "kotlin-coroutines-googleplay-temp",
+]
+arrow = [
+    "arrowkt-core",
+]
+okhttp = [
+    "okhttp",
+    "okhttp-logging-interceptor",
+    "retrofit"
+]
+testing = [
+    "kotest-junit5",
+    "kotest-assertions",
+    "kotest-property",
+    "kotest-property-arrow",
+    "kotest-assertions-arrow",
+    "kotest-datatest",
+    "kotlin-coroutines-test",
+    "mockk",
+    "cashapp-turbine"
+]
+compose = [
+    "compose-animation",
+    "compose-foundation",
+    "compose-material3",
+    "compose-material3-windowsize",
+    "compose-runtime",
+    "compose-ui",
+    "compose-activity",
+    "compose-viewmodel",
+    "compose-tooling",
+    "compose-runtime-livedate-temp",
+    "compose-coil",
+]
+activity = [
+    "androidx-activity",
+    "appcompat-activity"
+]
+glance = [
+    "glance",
+    "glance-appwidget",
+    "glance-material3"
+]
+hilt = [
+    "hilt"
+]
+room = [
+    "room-runtime",
+    "room-ktx"
+]
+opencsv = [
+    "opencsv-csv",
+    "opencsv-apache-commons"
+]
+
+[plugins]
+gradleWrapperUpgrade = { id = "org.gradle.wrapper-upgrade", version = "0.11.4" }
+koverPlugin = { id = "org.jetbrains.kotlinx.kover", version = "0.7.4" }

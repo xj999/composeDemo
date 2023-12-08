@@ -1,8 +1,37 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {
-    id("com.android.application") version "8.1.3" apply false
-    id("org.jetbrains.kotlin.android") version "1.9.10" apply false
-    id("com.google.devtools.ksp") version "1.9.10-1.0.13" apply false
-    id("com.google.dagger.hilt.android") version "2.48.1" apply false
+    id("ivy.detekt")
+
+    alias(libs.plugins.gradleWrapperUpgrade)
+
+    alias(libs.plugins.koverPlugin)
 
 }
+subprojects {
+    apply(plugin = "org.jetbrains.kotlinx.kover")
+    koverReport {
+        // filters for all report types of all build variants
+        filters {
+            excludes {
+                classes(
+                    "*Activity",
+                    "*Activity\$*",
+                    "*.BuildConfig",
+                    "dagger.hilt.*",
+                    "hilt_aggregated_deps.*",
+                    "*.Hilt_*"
+                )
+                annotatedBy("@Composable")
+            }
+        }
+    }
+}
+//fixme 不知道以下代码干嘛用的
+//wrapperUpgrade {
+//    gradle {
+//        create("ivyWallet") {
+//            repo.set("Ivy-Apps/ivy-wallet")
+//            baseBranch.set("main")
+//        }
+//    }
+//}
