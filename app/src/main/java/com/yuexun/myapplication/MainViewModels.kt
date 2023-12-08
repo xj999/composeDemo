@@ -8,14 +8,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import com.tencent.mmkv.MMKV
 import com.yuexun.myapplication.app.ComposeViewModel
+import com.yuexun.myapplication.app.Constants.APP_SWITCH
+import com.yuexun.myapplication.app.Constants.TENANT_NAME
 import com.yuexun.myapplication.data.HybridAppRepository
 import com.yuexun.myapplication.data.db.entity.CommonApp
-import com.yuexun.myapplication.data.db.entity.TagApp
+import com.yuexun.myapplication.data.db.entity.HybridApp
 import com.yuexun.myapplication.data.db.entity.generateTestData
-import com.yuexun.myapplication.network.Api
 import com.yuexun.myapplication.ui.composable.HomeEvent
 import com.yuexun.myapplication.ui.composable.HomeState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.time.LocalDateTime
@@ -27,6 +30,7 @@ class MainViewModels @Inject constructor(
 ) : ComposeViewModel<HomeState, HomeEvent>() {
 
     private val myApps = mutableStateOf(listOf<CommonApp>())
+    private val hybridApps = mutableStateOf(listOf<HybridApp>())
 
     private val tenantName = mutableStateOf("")
 
@@ -44,11 +48,11 @@ class MainViewModels @Inject constructor(
             tenantName = tenantName.value,
             false,
             myApp = myApps.value,
-            allApp = emptyList(),
+            allApp = hybridApps.value,
             listOf("1", "2"),
             listOf("3", "4"),
             listOf("5", "6"),
-            expanded=expanded.value
+            expanded = expanded.value
         )
 
     }
@@ -59,58 +63,42 @@ class MainViewModels @Inject constructor(
             is HomeEvent.OnNameBtnClick -> {
                 val current = LocalDateTime.now()
                 tenantName.value = "测试名称" + current.second
-                mk.putString("tenantName", tenantName.value)
+                mk.putString(TENANT_NAME, tenantName.value)
                 viewModelScope.launch {
                     hybridAppRepository.saveMyAPP(generateTestData())
                 }
-
             }
-
-            is HomeEvent.OnPreviousMonth -> {}
+            is HomeEvent.OnAppSwitchClick -> {
+                expanded.value = !expanded.value
+                mk.putBoolean(APP_SWITCH, expanded.value)
+            }
+            is HomeEvent.OnAppItemClick -> {
+                Timber.e("app click %s",event.app.toString())
+            }
         }
 
     }
 
     private fun start() {
-        viewModelScope.launch {
-            tenantName.value = mk.getString("tenantName", "testCompany").toString()
-            hybridAppRepository.getAllCommonApps().collect { apps ->
-                myApps.value = apps
-            }
+        viewModelScope.launch() {
+//           hybridAppRepository.fetchAppData()
+
+            tenantName.value = mk.getString(TENANT_NAME, "testCompany").toString()
+            expanded.value = mk.getBoolean(APP_SWITCH, false)
+
+            val commonAppsFlow = hybridAppRepository.getAllCommonApps()
+            val hybridAppsFlow = hybridAppRepository.getAllHybridApps()
+
+            combine(commonAppsFlow, hybridAppsFlow) { commonApps, hybrid ->
+                myApps.value = commonApps
+                hybridApps.value = hybrid
+            }.collect()
+
 
         }
     }
 
 
-    fun loadNetData() {
-        viewModelScope.launch {
-            val res = Api.inquireClassifiedPluginListForTeacherAccount()
-            Timber.e(res.toString())
-            val modifiedList = res.commonAppList.map { commonApp ->
-                val modifiedUuid =
-                    "https://st.yuexunit.com/fs/api/v1.0/viewPic.file?fileUuid=${commonApp.appLogoUuid}"
-                commonApp.copy(appLogoUuid = modifiedUuid)
-            }
-            hybridAppRepository.saveOrUpdateCommonApps(modifiedList)
-            val tagList = res.tagAppList.map { ti ->
-                TagApp(ti.tagId, ti.tagName)
-            }
-            hybridAppRepository.saveTagList(tagList)
-            for (ti in res.tagAppList) {
-                val tar = ti.hybridAppList.map { hybridAppList ->
-                    if (!hybridAppList.appLogoUuid.isNullOrBlank()) {
-                        val modifiedUuid =
-                            "https://st.yuexunit.com/fs/api/v1.0/viewPic.file?fileUuid=${hybridAppList.appLogoUuid}"
-                        hybridAppList.copy(appLogoUuid = modifiedUuid)
-                    } else {
-                        hybridAppList.copy(appLogoUuid = "https://cdn.pixabay.com/photo/2023/11/21/21/38/puffins-8404284_1280.jpg")
-                    }
-
-                }
-                hybridAppRepository.saveHybridApp(tar)
-            }
-        }
-    }
 
 
 }

@@ -16,12 +16,15 @@
 
 package com.yuexun.myapplication.data
 
+import com.yuexun.myapplication.data.db.entity.ApiResponseEntity
 import com.yuexun.myapplication.data.db.entity.CommonApp
 import com.yuexun.myapplication.data.db.entity.HybridApp
 import com.yuexun.myapplication.data.db.entity.TagApp
 import kotlinx.coroutines.flow.Flow
 
 interface HybridAppRepository {
+
+    suspend fun fetchAppData():ApiResponseEntity
 
     fun getAllCommonApps(): Flow<List<CommonApp>>
 

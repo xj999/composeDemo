@@ -11,7 +11,7 @@ import com.yuexun.myapplication.data.db.entity.CommonApp
 import com.yuexun.myapplication.data.db.entity.HybridApp
 import com.yuexun.myapplication.data.db.entity.TagApp
 
-@Database(entities = [CommonApp::class, HybridApp::class, TagApp::class], version = 1)
+@Database(entities = [CommonApp::class, HybridApp::class, TagApp::class], version = 1,exportSchema=false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun commonAppDao(): CommonAppDao
     abstract fun hybridAppDao(): HybridAppDao

@@ -3,7 +3,6 @@ package com.yuexun.myapplication.ui.composable
 import androidx.compose.runtime.Immutable
 import com.yuexun.myapplication.data.db.entity.CommonApp
 import com.yuexun.myapplication.data.db.entity.HybridApp
-import kotlinx.coroutines.flow.MutableStateFlow
 
 @Immutable
 data class HomeState(
