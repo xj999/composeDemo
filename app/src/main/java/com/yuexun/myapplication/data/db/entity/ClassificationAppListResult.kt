@@ -5,39 +5,26 @@ import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
+import androidx.room.Relation
 
 
 @Entity
 data class HybridApp(
     @PrimaryKey
     val appKey: String,
-    @ColumnInfo(name = "downloadUrl")
     val downloadUrl: String,
-    @ColumnInfo(name = "h5DeployStatusEnum")
     val h5DeployStatusEnum: Int,
-    @ColumnInfo(name = "hash")
     val hash: String,
-    @ColumnInfo(name = "latestVersion")
     val latestVersion: String,
-    @ColumnInfo(name = "dueFlag")
     val dueFlag: Int,
-    @ColumnInfo(name = "state")
     val state: Int,
-    @ColumnInfo(name = "appTypeEnum")
     val appTypeEnum: Int,
-    @ColumnInfo(name = "messageCount")
     val messageCount: Int,
-    @ColumnInfo(name = "tagId")
-    val tagId: String,
-    @ColumnInfo(name = "appNatureEnum")
+    val tagId: Int,
     val appNatureEnum: Int,
-    @ColumnInfo(name = "appHeaderColorEnum")
     val appHeaderColorEnum: Int,
-    @ColumnInfo(name = "appLogoUuid")
     val appLogoUuid: String,
-    @ColumnInfo(name = "appName")
     val appName: String,
-    @ColumnInfo(name = "appId")
     val appId: String
 )
 
@@ -46,33 +33,19 @@ data class HybridApp(
 data class CommonApp(
     @PrimaryKey
     val appKey: String,
-    @ColumnInfo(name = "downloadUrl")
     val downloadUrl: String,
-    @ColumnInfo(name = "h5DeployStatusEnum")
     val h5DeployStatusEnum: Int,
-    @ColumnInfo(name = "hash")
     val hash: String,
-    @ColumnInfo(name = "latestVersion")
     val latestVersion: String,
-    @ColumnInfo(name = "dueFlag")
     val dueFlag: Int,
-    @ColumnInfo(name = "state")
     val state: Int,
-    @ColumnInfo(name = "appTypeEnum")
     val appTypeEnum: Int,
-    @ColumnInfo(name = "messageCount")
     val messageCount: Int,
-    @ColumnInfo(name = "tagId")
-    val tagId: String,
-    @ColumnInfo(name = "appNatureEnum")
+    val tagId: Int,
     val appNatureEnum: Int,
-    @ColumnInfo(name = "appHeaderColorEnum")
     val appHeaderColorEnum: Int,
-    @ColumnInfo(name = "appLogoUuid")
     val appLogoUuid: String,
-    @ColumnInfo(name = "appName")
     val appName: String,
-    @ColumnInfo(name = "appId")
     val appId: String
 )
 
@@ -95,3 +68,13 @@ data class TagApp(
     @Ignore
     val hybridAppList: List<HybridApp> = emptyList()
 }
+
+
+data class TagWithHybridAppList(
+    @Embedded val tag: TagApp,
+    @Relation(
+        parentColumn = "tagId",
+        entityColumn = "tagId"
+    )
+    val hybridAppList: List<HybridApp>
+)

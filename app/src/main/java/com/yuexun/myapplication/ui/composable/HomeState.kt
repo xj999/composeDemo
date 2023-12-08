@@ -3,6 +3,7 @@ package com.yuexun.myapplication.ui.composable
 import androidx.compose.runtime.Immutable
 import com.yuexun.myapplication.data.db.entity.CommonApp
 import com.yuexun.myapplication.data.db.entity.HybridApp
+import com.yuexun.myapplication.data.db.entity.TagWithHybridAppList
 
 @Immutable
 data class HomeState(
@@ -13,7 +14,7 @@ data class HomeState(
 
     val myApp: List<CommonApp> = emptyList(),
 
-    val allApp: List<HybridApp> = emptyList(),
+    val allApp: List<TagWithHybridAppList> = emptyList(),
 
     val news: List<String> = emptyList(),
 

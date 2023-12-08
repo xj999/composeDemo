@@ -20,6 +20,7 @@ import com.yuexun.myapplication.data.db.entity.ApiResponseEntity
 import com.yuexun.myapplication.data.db.entity.CommonApp
 import com.yuexun.myapplication.data.db.entity.HybridApp
 import com.yuexun.myapplication.data.db.entity.TagApp
+import com.yuexun.myapplication.data.db.entity.TagWithHybridAppList
 import kotlinx.coroutines.flow.Flow
 
 interface HybridAppRepository {
@@ -39,5 +40,7 @@ interface HybridAppRepository {
     suspend fun saveTagList(list: List<TagApp>)
 
     suspend fun saveHybridApp(list: List<HybridApp>)
+
+    fun getAllTagWithHybridApps(): Flow<List<TagWithHybridAppList>>
 
 }

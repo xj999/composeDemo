@@ -17,7 +17,7 @@ fun generateTestData(): CommonApp {
         state = faker.number().numberBetween(0, 3),
         appTypeEnum = faker.number().numberBetween(0, 2),
         messageCount = faker.number().numberBetween(0, 100),
-        tagId = faker.idNumber().valid(),
+        tagId = faker.number().numberBetween(0, 100),
         appNatureEnum = faker.number().numberBetween(0, 2),
         appHeaderColorEnum = faker.number().numberBetween(0, 3),
         appLogoUuid = faker.internet().image().toUri().toString(),

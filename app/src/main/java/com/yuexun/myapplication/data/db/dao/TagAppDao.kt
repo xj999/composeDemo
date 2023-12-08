@@ -5,7 +5,9 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import com.yuexun.myapplication.data.db.entity.TagApp
+import com.yuexun.myapplication.data.db.entity.TagWithHybridAppList
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -17,4 +19,9 @@ interface TagAppDao{
     suspend fun insertAll(vararg tag: TagApp)
     @Delete
     suspend fun delete(tag: TagApp)
+
+
+    @Transaction
+    @Query("SELECT * FROM TagApp")
+    fun getTagWithHybridAppLists(): Flow<List<TagWithHybridAppList>>
 }

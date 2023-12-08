@@ -18,7 +18,6 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ElevatedCard
@@ -35,8 +34,9 @@ import com.bumptech.glide.integration.compose.GlideImage
 import com.yuexun.myapplication.R
 import com.yuexun.myapplication.data.db.entity.CommonApp
 import com.yuexun.myapplication.data.db.entity.HybridApp
+import com.yuexun.myapplication.data.db.entity.TagApp
+import com.yuexun.myapplication.data.db.entity.TagWithHybridAppList
 import com.yuexun.myapplication.ui.LColors
-import timber.log.Timber
 
 
 @Composable
@@ -185,8 +185,7 @@ fun ElevatedButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun AppGrid(apps: List<CommonApp>, hybridApps: List<HybridApp>, appSwitch: Boolean, onSwitchClick: () -> Unit, onAppItemClick: (Any) -> Unit) {
-    val groupedApps = hybridApps.groupBy { it.tagId }
+fun AppGrid(apps: List<CommonApp>, hybridApps: List<TagWithHybridAppList>, appSwitch: Boolean, onSwitchClick: () -> Unit, onAppItemClick: (Any) -> Unit) {
 
     LazyVerticalGrid(
         columns = GridCells.Fixed(4),
@@ -204,11 +203,11 @@ fun AppGrid(apps: List<CommonApp>, hybridApps: List<HybridApp>, appSwitch: Boole
 
         }
         if (hybridApps.isNotEmpty() && appSwitch) {
-            groupedApps.forEach { (category, hybridList) ->
+            hybridApps.forEach {
                 item(span = { GridItemSpan(maxLineSpan) }) {
-                    CategoryHeader(category)
+                    CategoryHeader(it.tag)
                 }
-                items(hybridList) { app ->
+                items(it.hybridAppList) { app ->
                     HybridAppUi(app, onAppItemClick)
                 }
             }
@@ -222,15 +221,9 @@ fun AppGrid(apps: List<CommonApp>, hybridApps: List<HybridApp>, appSwitch: Boole
 
 
 @Composable
-fun CategoryHeader(category: String) {
-    val categoryText = when (category) {
-        "1" -> "我的应用"
-        "2" -> "后勤管理"
-        "3" -> "办公"
-        else -> "其他"
-    }
+fun CategoryHeader(tag: TagApp) {
     Text(
-        text = categoryText,
+        text = tag.tagName,
         fontWeight = FontWeight.Bold,
         fontSize = 16.sp,
         modifier = Modifier

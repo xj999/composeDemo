@@ -13,6 +13,7 @@ import com.yuexun.myapplication.app.Constants.TENANT_NAME
 import com.yuexun.myapplication.data.HybridAppRepository
 import com.yuexun.myapplication.data.db.entity.CommonApp
 import com.yuexun.myapplication.data.db.entity.HybridApp
+import com.yuexun.myapplication.data.db.entity.TagWithHybridAppList
 import com.yuexun.myapplication.data.db.entity.generateTestData
 import com.yuexun.myapplication.ui.composable.HomeEvent
 import com.yuexun.myapplication.ui.composable.HomeState
@@ -30,7 +31,8 @@ class MainViewModels @Inject constructor(
 ) : ComposeViewModel<HomeState, HomeEvent>() {
 
     private val myApps = mutableStateOf(listOf<CommonApp>())
-    private val hybridApps = mutableStateOf(listOf<HybridApp>())
+
+    private val hybridApps = mutableStateOf(listOf<TagWithHybridAppList>())
 
     private val tenantName = mutableStateOf("")
 
@@ -81,13 +83,13 @@ class MainViewModels @Inject constructor(
 
     private fun start() {
         viewModelScope.launch() {
-//           hybridAppRepository.fetchAppData()
+           hybridAppRepository.fetchAppData()
 
             tenantName.value = mk.getString(TENANT_NAME, "testCompany").toString()
             expanded.value = mk.getBoolean(APP_SWITCH, false)
 
             val commonAppsFlow = hybridAppRepository.getAllCommonApps()
-            val hybridAppsFlow = hybridAppRepository.getAllHybridApps()
+            val hybridAppsFlow = hybridAppRepository.getAllTagWithHybridApps()
 
             combine(commonAppsFlow, hybridAppsFlow) { commonApps, hybrid ->
                 myApps.value = commonApps

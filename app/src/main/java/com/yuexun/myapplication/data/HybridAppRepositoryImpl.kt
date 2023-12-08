@@ -5,6 +5,7 @@ import com.yuexun.myapplication.data.db.entity.ApiResponseEntity
 import com.yuexun.myapplication.data.db.entity.CommonApp
 import com.yuexun.myapplication.data.db.entity.HybridApp
 import com.yuexun.myapplication.data.db.entity.TagApp
+import com.yuexun.myapplication.data.db.entity.TagWithHybridAppList
 import com.yuexun.myapplication.network.Api
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -67,7 +68,6 @@ class HybridAppRepositoryImpl(private val appDatabase: AppDatabase) : HybridAppR
     }
 
     override fun getAllHybridApps(): Flow<List<HybridApp>> {
-        Timber.e("====getAllHybridApps",)
         return appDatabase.hybridAppDao().getAll()
     }
 
@@ -122,11 +122,15 @@ class HybridAppRepositoryImpl(private val appDatabase: AppDatabase) : HybridAppR
     }
 
     override suspend fun saveTagList(list: List<TagApp>) {
+        appDatabase.tagAppDao().insertAll(*list.toTypedArray())
     }
 
     override suspend fun saveHybridApp(list: List<HybridApp>) {
-        Timber.e("++++++++++++++++%s",list.size)
         appDatabase.hybridAppDao().insertAll(*list.toTypedArray())
+    }
+
+    override fun getAllTagWithHybridApps(): Flow<List<TagWithHybridAppList>> {
+        return appDatabase.tagAppDao().getTagWithHybridAppLists()
     }
 
 
