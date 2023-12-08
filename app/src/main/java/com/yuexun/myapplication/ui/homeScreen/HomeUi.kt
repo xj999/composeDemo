@@ -1,10 +1,9 @@
 @file:OptIn(ExperimentalGlideComposeApi::class)
 
-package com.yuexun.myapplication.ui.composable
+package com.yuexun.myapplication.ui.homeScreen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -34,12 +33,8 @@ import androidx.compose.ui.unit.sp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.yuexun.myapplication.R
-import com.midai.data.db.entity.CommonApp
 import com.midai.data.db.entity.HybridApp
-import com.midai.data.db.entity.TagApp
-import com.midai.data.db.entity.TagWithHybridAppList
 import com.yuexun.myapplication.ui.LColors
-import timber.log.Timber
 
 
 @Composable

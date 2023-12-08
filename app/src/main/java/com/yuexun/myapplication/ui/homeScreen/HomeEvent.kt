@@ -1,4 +1,4 @@
-package com.yuexun.myapplication.ui.composable
+package com.yuexun.myapplication.ui.homeScreen
 
 
 sealed interface HomeEvent {

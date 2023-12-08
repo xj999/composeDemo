@@ -10,8 +10,8 @@ import com.tencent.mmkv.MMKV
 import com.yuexun.myapplication.app.ComposeViewModel
 import com.yuexun.myapplication.app.Constants.APP_SWITCH
 import com.yuexun.myapplication.app.Constants.TENANT_NAME
-import com.yuexun.myapplication.ui.composable.HomeEvent
-import com.yuexun.myapplication.ui.composable.HomeState
+import com.yuexun.myapplication.ui.homeScreen.HomeEvent
+import com.yuexun.myapplication.ui.homeScreen.HomeState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine

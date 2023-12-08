@@ -6,7 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
-import com.yuexun.myapplication.ui.composable.HomeScreen
+import com.yuexun.myapplication.ui.homeScreen.HomeScreen
 import com.yuexun.myapplication.ui.theme.MyApplicationTheme
 import dagger.hilt.android.AndroidEntryPoint
 

@@ -1,4 +1,4 @@
-package com.yuexun.myapplication.ui.composable
+package com.yuexun.myapplication.ui.homeScreen
 
 import androidx.compose.runtime.Immutable
 import com.midai.data.db.entity.CommonApp
