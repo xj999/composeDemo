@@ -68,6 +68,5 @@ dependencies {
     ksp(libs.hilt.compiler)
     implementation(libs.gson)
     implementation (libs.mmkv)
-    implementation(libs.glide)
 
 }

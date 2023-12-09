@@ -90,8 +90,6 @@ class MainViewModels @Inject constructor(
                 myApps.value = commonApps
                 hybridApps.value = hybrid
             }.collect()
-
-
         }
     }
 

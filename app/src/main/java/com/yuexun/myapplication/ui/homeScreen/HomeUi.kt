@@ -1,4 +1,3 @@
-@file:OptIn(ExperimentalGlideComposeApi::class)
 
 package com.yuexun.myapplication.ui.homeScreen
 
@@ -30,10 +29,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
-import com.bumptech.glide.integration.compose.GlideImage
-import com.yuexun.myapplication.R
+import coil.compose.AsyncImage
 import com.midai.data.db.entity.HybridApp
+import com.yuexun.myapplication.R
 import com.yuexun.myapplication.ui.LColors
 
 
@@ -75,12 +73,13 @@ fun MyApp(app: com.midai.data.db.entity.CommonApp, onAppItemClick: (Any) -> Unit
             .fillMaxWidth()
             .clickable { onAppItemClick(app) }, horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        GlideImage(
+        AsyncImage(
             model = app.appLogoUuid,
             contentDescription = null,
             Modifier
                 .size(50.dp)
-                .padding(5.dp)
+                .padding(5.dp),
+            placeholder = painterResource(id = R.drawable.baseline_brightness_5_24)
         )
         Text(text = app.appName, fontSize = 16.sp, maxLines = 1)
     }
