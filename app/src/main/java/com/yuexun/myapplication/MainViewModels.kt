@@ -79,14 +79,15 @@ class MainViewModels @Inject constructor(
     private fun start() {
         viewModelScope.launch() {
            hybridAppRepository.fetchRemoteAppData()
+            Timber.e("start =============================")
 
             tenantName.value = mk.getString(TENANT_NAME, "testCompany").toString()
             expanded.value = mk.getBoolean(APP_SWITCH, false)
-
             val commonAppsFlow = hybridAppRepository.getLocalMyApps()
             val hybridAppsFlow = hybridAppRepository.getAllTagWithHybridApps()
 
             combine(commonAppsFlow, hybridAppsFlow) { commonApps, hybrid ->
+                Timber.e("collect =============================")
                 myApps.value = commonApps
                 hybridApps.value = hybrid
             }.collect()

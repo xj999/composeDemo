@@ -1,6 +1,8 @@
-
 package com.yuexun.myapplication.ui.homeScreen
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -30,9 +32,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.midai.data.db.entity.CommonApp
 import com.midai.data.db.entity.HybridApp
+import com.midai.data.db.entity.TagWithHybridAppList
 import com.yuexun.myapplication.R
 import com.yuexun.myapplication.ui.LColors
+import timber.log.Timber
 
 
 @Composable
@@ -99,10 +104,12 @@ fun HybridAppUi(app: HybridApp, onAppItemClick: (Any) -> Unit) {
 //            contentDescription = null,
 //            Modifier.size(50.dp)
 //        )
-        Image( painter = painterResource(R.drawable.baseline_qr_code_scanner_24),
-            contentDescription = "Contact profile picture", Modifier.size(50.dp))
+        Image(
+            painter = painterResource(R.drawable.baseline_qr_code_scanner_24),
+            contentDescription = "Contact profile picture", Modifier.size(50.dp)
+        )
         Text(
-            text = app.appName. trim(),
+            text = app.appName.trim(),
             fontSize = 16.sp,
             maxLines = 1,
             modifier = Modifier.align(CenterHorizontally)
@@ -124,26 +131,22 @@ fun HomeScreen(homeState: HomeState, onEvent: (HomeEvent) -> Unit, modifier: Mod
             tenantSwitch = false,
             onTenantSwitchClick = {},
             onScanBtnClick = {})
-        ElevatedCard(
-            elevation = CardDefaults.cardElevation(
-                defaultElevation = 6.dp
-            ),
-            modifier = Modifier
-                .padding(10.dp, 65.dp, 10.dp, 10.dp)
-        ) {
-
-            Box(
+        if (homeState.myApp.isNotEmpty() || (homeState.expanded && homeState.allApp.isNotEmpty())) {
+            ElevatedCard(
+                elevation = CardDefaults.cardElevation(
+                    defaultElevation = 6.dp
+                ),
                 modifier = Modifier
+                    .padding(10.dp, 65.dp, 10.dp, 10.dp)
                     .background(LColors.White)
-                    .wrapContentHeight()
-                    .fillMaxWidth()
-            )
-            {
+            ) {
+
                 AppGrid(homeState.myApp, homeState.allApp,
                     homeState.expanded, onSwitchClick = { onEvent(HomeEvent.OnAppSwitchClick) },
                     onAppItemClick = { onEvent(HomeEvent.OnAppItemClick(it)) })
             }
         }
+
         ElevatedButton(
             onClick = { onEvent(HomeEvent.OnNameBtnClick) }, modifier = Modifier
                 .align(Alignment.BottomEnd)
@@ -200,8 +203,8 @@ fun ElevatedButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
 
 @Composable
 fun AppGrid(
-    apps: List<com.midai.data.db.entity.CommonApp>,
-    hybridApps: List<com.midai.data.db.entity.TagWithHybridAppList>,
+    apps: List<CommonApp>,
+    hybridApps: List<TagWithHybridAppList>,
     appSwitch: Boolean,
     onSwitchClick: () -> Unit,
     onAppItemClick: (Any) -> Unit
@@ -211,6 +214,7 @@ fun AppGrid(
         columns = GridCells.Fixed(4),
         modifier = Modifier.padding(10.dp)
     ) {
+        Timber.e("show ui =============================%s", apps.size)
         if (apps.isNotEmpty()) {
             items(apps) { app ->
                 MyApp(app, onAppItemClick)
@@ -222,6 +226,7 @@ fun AppGrid(
             }
 
         }
+
         if (hybridApps.isNotEmpty() && appSwitch) {
             hybridApps.forEach {
                 item(span = { GridItemSpan(maxLineSpan) }) {
@@ -236,8 +241,26 @@ fun AppGrid(
 
 
     }
+    AnimatedVisibility(appSwitch, enter = expandVertically() , exit = shrinkVertically()) {
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(4),
+            modifier = Modifier.padding(10.dp)
+        ) {
+            hybridApps.forEach {
+                item(span = { GridItemSpan(maxLineSpan) }) {
+                    CategoryHeader(it.tag)
+                }
+                items(it.hybridAppList) { app ->
+                    HybridAppUi(app, onAppItemClick)
+                }
+            }
 
+        }
+
+
+    }
 }
+
 
 
 @Composable
