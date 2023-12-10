@@ -1,8 +1,5 @@
 package com.yuexun.myapplication.ui.homeScreen
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -15,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -22,6 +20,8 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.midai.data.db.entity.CommonApp
 import com.midai.data.db.entity.HybridApp
+import com.midai.data.db.entity.TagApp
 import com.midai.data.db.entity.TagWithHybridAppList
 import com.yuexun.myapplication.R
 import com.yuexun.myapplication.ui.LColors
@@ -76,6 +77,7 @@ fun MyApp(app: com.midai.data.db.entity.CommonApp, onAppItemClick: (Any) -> Unit
     Column(
         Modifier
             .fillMaxWidth()
+            .height(75.dp)
             .clickable { onAppItemClick(app) }, horizontalAlignment = Alignment.CenterHorizontally
     ) {
         AsyncImage(
@@ -96,6 +98,7 @@ fun HybridAppUi(app: HybridApp, onAppItemClick: (Any) -> Unit) {
         Modifier
             .fillMaxWidth()
             .padding(5.dp)
+            .height(75.dp)
             .clickable { onAppItemClick(app) }, horizontalAlignment = Alignment.CenterHorizontally
 
     ) {
@@ -124,36 +127,26 @@ fun HomeScreen(homeState: HomeState, onEvent: (HomeEvent) -> Unit, modifier: Mod
             .background(LColors.White)
             .fillMaxHeight()
             .fillMaxWidth()
-    )
-    {
-        TitleBar(
-            showName = homeState.tenantName,
-            tenantSwitch = false,
-            onTenantSwitchClick = {},
-            onScanBtnClick = {})
-        if (homeState.myApp.isNotEmpty() || (homeState.expanded && homeState.allApp.isNotEmpty())) {
-            ElevatedCard(
-                elevation = CardDefaults.cardElevation(
-                    defaultElevation = 6.dp
-                ),
-                modifier = Modifier
-                    .padding(10.dp, 65.dp, 10.dp, 10.dp)
-                    .background(LColors.White)
-            ) {
+    ) {
+        Column(
+            modifier = Modifier
+                .background(LColors.White)
+                .fillMaxWidth()
+        )
+        {
+            TitleBar(
+                showName = homeState.tenantName,
+                tenantSwitch = false,
+                onTenantSwitchClick = {},
+                onScanBtnClick = {})
 
-                AppGrid(homeState.myApp, homeState.allApp,
-                    homeState.expanded, onSwitchClick = { onEvent(HomeEvent.OnAppSwitchClick) },
-                    onAppItemClick = { onEvent(HomeEvent.OnAppItemClick(it)) })
-            }
+            AppGrid(homeState.myApp, homeState.allApp, homeState.news,
+                homeState.expanded, onSwitchClick = { onEvent(HomeEvent.OnAppSwitchClick) },
+                onAppItemClick = { onEvent(HomeEvent.OnAppItemClick(it)) })
+
+
         }
 
-        ElevatedButton(
-            onClick = { onEvent(HomeEvent.OnNameBtnClick) }, modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(16.dp)
-                .wrapContentWidth()
-                .wrapContentHeight()
-        )
     }
 
 }
@@ -205,66 +198,79 @@ fun ElevatedButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
 fun AppGrid(
     apps: List<CommonApp>,
     hybridApps: List<TagWithHybridAppList>,
+    newsData: List<String>,
     appSwitch: Boolean,
     onSwitchClick: () -> Unit,
     onAppItemClick: (Any) -> Unit
 ) {
-
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(4),
-        modifier = Modifier.padding(10.dp)
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight()
     ) {
-        Timber.e("show ui =============================%s", apps.size)
-        if (apps.isNotEmpty()) {
-            items(apps) { app ->
-                MyApp(app, onAppItemClick)
-            }
-            item {
-                AppSwitchBtn(switch = appSwitch, onClick = {
-                    onSwitchClick()
-                })
-            }
 
+        if (newsData.isNotEmpty()) {
+            item { LBanner(bannerData = newsData) }
         }
-
-        if (hybridApps.isNotEmpty() && appSwitch) {
-            hybridApps.forEach {
-                item(span = { GridItemSpan(maxLineSpan) }) {
-                    CategoryHeader(it.tag)
+        item {
+            ElevatedCard(
+                elevation = CardDefaults.cardElevation(
+                    defaultElevation = 6.dp
+                ),
+                modifier = Modifier
+                    .padding(10.dp, 15.dp, 10.dp, 10.dp)
+                    .background(LColors.White)
+            ) {
+                val rowHeight = 75
+                val itemsPerRow = 4
+                val hybridHeight = hybridApps.sumOf {
+                    val itemCount = it.hybridAppList.size
+                    val rows = (itemCount + itemsPerRow - 1) / itemsPerRow
+                    rows * rowHeight + 35
                 }
-                items(it.hybridAppList) { app ->
-                    HybridAppUi(app, onAppItemClick)
+                val appHeight = ((apps.size + 1 + itemsPerRow - 1) / itemsPerRow)*75
+                Timber.e("hybridHeight %s appHeight = %s",hybridHeight,appHeight)
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(4),
+                    modifier = Modifier
+                        .padding(10.dp)
+                        .fillMaxWidth()
+                        .height(if (apps.isEmpty()) hybridHeight.dp else (hybridHeight + appHeight).dp)
+                ) {
+                    if (apps.isNotEmpty()) {
+                        items(apps) { app ->
+                            MyApp(app, onAppItemClick)
+                        }
+                        item {
+                            AppSwitchBtn(switch = appSwitch, onClick = {
+                                onSwitchClick()
+                            })
+                        }
+
+                    }
+
+                    if (hybridApps.isNotEmpty() && appSwitch) {
+                        hybridApps.forEach {
+                            item(span = { GridItemSpan(maxLineSpan) }) {
+                                CategoryHeader(it.tag)
+                            }
+                            items(it.hybridAppList) { app ->
+                                HybridAppUi(app, onAppItemClick)
+                            }
+                        }
+
+                    }
                 }
             }
-
         }
-
 
     }
-    AnimatedVisibility(appSwitch, enter = expandVertically() , exit = shrinkVertically()) {
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(4),
-            modifier = Modifier.padding(10.dp)
-        ) {
-            hybridApps.forEach {
-                item(span = { GridItemSpan(maxLineSpan) }) {
-                    CategoryHeader(it.tag)
-                }
-                items(it.hybridAppList) { app ->
-                    HybridAppUi(app, onAppItemClick)
-                }
-            }
-
-        }
 
 
-    }
 }
 
-
-
 @Composable
-fun CategoryHeader(tag: com.midai.data.db.entity.TagApp) {
+fun CategoryHeader(tag: TagApp) {
     Text(
         text = tag.tagName,
         fontWeight = FontWeight.Bold,
@@ -272,5 +278,6 @@ fun CategoryHeader(tag: com.midai.data.db.entity.TagApp) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
+            .height(30.dp)
     )
 }
