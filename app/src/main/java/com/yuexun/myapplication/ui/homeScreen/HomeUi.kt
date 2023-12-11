@@ -110,8 +110,8 @@ fun HomeScreen(homeState: HomeState, onEvent: ((HomeEvent) -> Unit), modifier: M
             onTenantSwitchClick = {},
             onScanBtnClick = {})
     }, floatingActionButton = {
-        FloatingActionButton(onClick = { onEvent(HomeEvent.OnNameBtnClick) }, shape = CircleShape, modifier = Modifier.background(LColors.Blue.extraLight)) {
-            Icon(Icons.Default.Add, contentDescription = "Add",modifier=Modifier.background(LColors.Blue.extraLight))
+        FloatingActionButton(onClick = { onEvent(HomeEvent.OnNameBtnClick) }, shape = CircleShape) {
+            Icon(Icons.Default.Add, contentDescription = "Add")
         }
     }){
         Column(
