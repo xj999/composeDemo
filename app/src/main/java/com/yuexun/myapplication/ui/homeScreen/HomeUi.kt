@@ -13,14 +13,21 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -96,21 +103,29 @@ fun HybridAppUi(app: HybridApp, onAppItemClick: (Any) -> Unit) {
 
 @Composable
 fun HomeScreen(homeState: HomeState, onEvent: ((HomeEvent) -> Unit), modifier: Modifier = Modifier) {
+    Scaffold (topBar = {
+        TitleBar(
+            showName = homeState.tenantName,
+            tenantSwitch = false,
+            onTenantSwitchClick = {},
+            onScanBtnClick = {})
+    }, floatingActionButton = {
+        FloatingActionButton(onClick = { onEvent(HomeEvent.OnNameBtnClick) }, shape = CircleShape, modifier = Modifier.background(LColors.Blue.extraLight)) {
+            Icon(Icons.Default.Add, contentDescription = "Add",modifier=Modifier.background(LColors.Blue.extraLight))
+        }
+    }){
         Column(
             modifier = Modifier
                 .background(LColors.White)
                 .fillMaxWidth()
+                .padding(it)
         )
         {
-            TitleBar(
-                showName = homeState.tenantName,
-                tenantSwitch = false,
-                onTenantSwitchClick = {},
-                onScanBtnClick = {})
-
             AppGrid(homeState.myApp, homeState.allApp, homeState.news,
                 homeState.expanded, onSwitchClick = { onEvent(HomeEvent.OnAppSwitchClick) },
                 onAppItemClick = { onEvent(HomeEvent.OnAppItemClick(it)) })
+        }
+
     }
 
 }
@@ -197,7 +212,9 @@ fun AppGrid(
         }
         item {
             // TODO:  待办模块
-             Box(modifier = Modifier.fillMaxWidth().height(500.dp))
+             Box(modifier = Modifier
+                 .fillMaxWidth()
+                 .height(500.dp))
              {
                 Timber.e("---------------- todo ")
              }

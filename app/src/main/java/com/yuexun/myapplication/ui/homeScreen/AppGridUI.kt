@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -76,7 +77,6 @@ fun MyAppGridColumn(
                         CategoryHeader(tag = it.tag)
                     }
                 }
-                Timber.e("---------------- %s ",it.tag.tagName)
                 it.hybridAppList.chunked(rowCount).forEach { row ->
 
                     MyAppGridRow(rowCount, row, appSwitch, onAppItemClick, onSwitchClick, AppType.HybridApp)
@@ -103,7 +103,7 @@ private fun MyAppGridRow(
 ) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         row.forEach {
-                MyApp(
+                AppItem(
                     modifier = Modifier
                         .weight(1f)
                         .height(75.dp)
@@ -136,7 +136,10 @@ private fun MyAppGridRow(
 
 
 @Composable
-fun MyApp(modifier: Modifier, app: HybridApp) {
+fun AppItem(modifier: Modifier, app: HybridApp) {
+    LaunchedEffect(Unit){
+        Timber.e(app.appKey)
+    }
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
