@@ -7,11 +7,10 @@ import androidx.room.RoomDatabase
 import com.midai.data.db.dao.CommonAppDao
 import com.midai.data.db.dao.HybridAppDao
 import com.midai.data.db.dao.TagAppDao
-import com.midai.data.db.entity.CommonApp
 import com.midai.data.db.entity.HybridApp
 import com.midai.data.db.entity.TagApp
 
-@Database(entities = [CommonApp::class, HybridApp::class, TagApp::class], version = 1,exportSchema=false)
+@Database(entities = [HybridApp::class, TagApp::class], version = 1,exportSchema=false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun commonAppDao(): CommonAppDao
     abstract fun hybridAppDao(): HybridAppDao

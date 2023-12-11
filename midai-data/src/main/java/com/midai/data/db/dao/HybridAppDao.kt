@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface HybridAppDao {
-    @Query("SELECT * FROM HybridApp")
+    @Query("SELECT * FROM HybridApp where type = 'HybridApp'")
     fun getAll(): Flow<List<HybridApp>>
 
     @Query("SELECT * FROM HybridApp WHERE appId IN (:appIds)")

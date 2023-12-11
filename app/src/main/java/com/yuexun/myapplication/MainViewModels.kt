@@ -6,6 +6,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
+import com.midai.data.db.entity.HybridApp
+import com.midai.data.db.entity.TagWithHybridAppList
 import com.tencent.mmkv.MMKV
 import com.yuexun.myapplication.app.ComposeViewModel
 import com.yuexun.myapplication.app.Constants.APP_SWITCH
@@ -25,9 +27,9 @@ class MainViewModels @Inject constructor(
     private val hybridAppRepository: com.midai.data.HybridAppRepository
 ) : ComposeViewModel<HomeState, HomeEvent>() {
 
-    private val myApps = mutableStateOf(listOf<com.midai.data.db.entity.CommonApp>())
+    private val myApps = mutableStateOf(listOf<HybridApp>())
 
-    private val hybridApps = mutableStateOf(listOf<com.midai.data.db.entity.TagWithHybridAppList>())
+    private val hybridApps = mutableStateOf(listOf<TagWithHybridAppList>())
 
     private val tenantName = mutableStateOf("")
 
@@ -45,7 +47,7 @@ class MainViewModels @Inject constructor(
             tenantName = tenantName.value,
             false,
             myApp = myApps.value,
-            allApp = hybridApps.value,
+            allApp = hybridApps.value.sortedByDescending { it.tag.tagId },
             listOf("1", "2"),
             listOf("3", "4"),
             listOf("5", "6"),
@@ -54,7 +56,6 @@ class MainViewModels @Inject constructor(
 
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onEvent(event: HomeEvent) {
         when (event) {
             is HomeEvent.OnNameBtnClick -> {
@@ -62,10 +63,11 @@ class MainViewModels @Inject constructor(
                 tenantName.value = "测试名称" + current.second
                 mk.putString(TENANT_NAME, tenantName.value)
                 viewModelScope.launch {
-                    hybridAppRepository.saveMyAPP(com.midai.data.db.entity.generateTestData())
+//                    hybridAppRepository.saveMyAPP(com.midai.data.db.entity.generateTestData())
                 }
             }
             is HomeEvent.OnAppSwitchClick -> {
+                Timber.e("switch click -----------------------")
                 expanded.value = !expanded.value
                 mk.putBoolean(APP_SWITCH, expanded.value)
             }
@@ -77,9 +79,12 @@ class MainViewModels @Inject constructor(
     }
 
     private fun start() {
-        viewModelScope.launch() {
-           hybridAppRepository.fetchRemoteAppData()
-            Timber.e("start =============================")
+        viewModelScope.launch(errorHandlerMessage) {
+           try {
+               hybridAppRepository.fetchRemoteAppData()
+           } catch (e: Exception) {
+               e.printStackTrace()
+           }
 
             tenantName.value = mk.getString(TENANT_NAME, "testCompany").toString()
             expanded.value = mk.getBoolean(APP_SWITCH, false)
@@ -87,7 +92,6 @@ class MainViewModels @Inject constructor(
             val hybridAppsFlow = hybridAppRepository.getAllTagWithHybridApps()
 
             combine(commonAppsFlow, hybridAppsFlow) { commonApps, hybrid ->
-                Timber.e("collect =============================")
                 myApps.value = commonApps
                 hybridApps.value = hybrid
             }.collect()

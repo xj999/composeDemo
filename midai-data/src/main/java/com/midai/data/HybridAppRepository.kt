@@ -17,25 +17,23 @@
 package com.midai.data
 
 import com.midai.data.db.entity.ApiResponseEntity
-import com.midai.data.db.entity.CommonApp
 import com.midai.data.db.entity.HybridApp
 import com.midai.data.db.entity.TagApp
 import com.midai.data.db.entity.TagWithHybridAppList
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.withContext
 
 interface HybridAppRepository {
 
     suspend fun fetchRemoteAppData(): ApiResponseEntity
 
-    fun getLocalMyApps(): Flow<List<CommonApp>>
+    fun getLocalMyApps(): Flow<List<HybridApp>>
 
     fun getLocalHybridApps(): Flow<List<HybridApp>>
 
 
-    suspend fun saveOrUpdateCommonApps(list: List<CommonApp>)
+    suspend fun saveOrUpdateCommonApps(list: List<HybridApp>)
 
-    suspend fun saveMyAPP(app: CommonApp)
+    suspend fun saveMyAPP(app: HybridApp)
 
 
     suspend fun saveTagList(list: List<TagApp>)

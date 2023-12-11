@@ -4,10 +4,10 @@ import androidx.core.net.toUri
 import com.github.javafaker.Faker
 import java.util.Locale
 
-fun generateTestData(): CommonApp {
+fun generateTestData(): HybridApp {
     val faker = Faker(Locale.ENGLISH) // 设置为英文本地化
 
-    return CommonApp(
+    return HybridApp(
         appKey = faker.app().name(),
         downloadUrl = faker.internet().url(),
         h5DeployStatusEnum = faker.number().numberBetween(0, 2),
@@ -22,6 +22,7 @@ fun generateTestData(): CommonApp {
         appHeaderColorEnum = faker.number().numberBetween(0, 3),
         appLogoUuid = faker.internet().image().toUri().toString(),
         appName = faker.app().name(),
-        appId = faker.idNumber().valid()
+        appId = faker.idNumber().valid(),
+        type = AppType.HybridApp
     )
 }

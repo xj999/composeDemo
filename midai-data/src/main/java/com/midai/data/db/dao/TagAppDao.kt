@@ -21,6 +21,6 @@ interface TagAppDao{
 
 
     @Transaction
-    @Query("SELECT * FROM TagApp")
+    @Query("SELECT * FROM TagApp where tagId IN (SELECT DISTINCT tagId FROM HybridApp WHERE type = 'HybridApp')")
     fun getTagWithHybridAppLists(): Flow<List<TagWithHybridAppList>>
 }

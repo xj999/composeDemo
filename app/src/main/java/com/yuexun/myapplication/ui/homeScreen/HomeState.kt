@@ -1,7 +1,7 @@
 package com.yuexun.myapplication.ui.homeScreen
 
 import androidx.compose.runtime.Immutable
-import com.midai.data.db.entity.CommonApp
+import com.midai.data.db.entity.HybridApp
 import com.midai.data.db.entity.TagWithHybridAppList
 
 @Immutable
@@ -11,9 +11,9 @@ data class HomeState(
 
     val tenantSwitch: Boolean = false,
 
-    val myApp: List<com.midai.data.db.entity.CommonApp> = emptyList(),
+    val myApp: List<HybridApp> = emptyList(),
 
-    val allApp: List<com.midai.data.db.entity.TagWithHybridAppList> = emptyList(),
+    val allApp: List<TagWithHybridAppList> = emptyList(),
 
     val news: List<String> = emptyList(),
 

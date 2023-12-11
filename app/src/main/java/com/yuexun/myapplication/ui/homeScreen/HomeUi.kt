@@ -13,28 +13,21 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.GridItemSpan
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ElevatedButton
-import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
-import com.midai.data.db.entity.CommonApp
+import com.google.gson.Gson
+import com.midai.data.db.entity.ApiResponseEntity
 import com.midai.data.db.entity.HybridApp
-import com.midai.data.db.entity.TagApp
 import com.midai.data.db.entity.TagWithHybridAppList
 import com.yuexun.myapplication.R
 import com.yuexun.myapplication.ui.LColors
@@ -72,25 +65,6 @@ fun AppSwitchBtn(switch: Boolean, onClick: () -> Unit) {
 
 }
 
-@Composable
-fun MyApp(app: com.midai.data.db.entity.CommonApp, onAppItemClick: (Any) -> Unit) {
-    Column(
-        Modifier
-            .fillMaxWidth()
-            .height(75.dp)
-            .clickable { onAppItemClick(app) }, horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        AsyncImage(
-            model = app.appLogoUuid,
-            contentDescription = null,
-            Modifier
-                .size(50.dp)
-                .padding(5.dp),
-            placeholder = painterResource(id = R.drawable.baseline_brightness_5_24)
-        )
-        Text(text = app.appName, fontSize = 16.sp, maxLines = 1)
-    }
-}
 
 @Composable
 fun HybridAppUi(app: HybridApp, onAppItemClick: (Any) -> Unit) {
@@ -121,13 +95,7 @@ fun HybridAppUi(app: HybridApp, onAppItemClick: (Any) -> Unit) {
 }
 
 @Composable
-fun HomeScreen(homeState: HomeState, onEvent: (HomeEvent) -> Unit, modifier: Modifier = Modifier) {
-    Box(
-        modifier = Modifier
-            .background(LColors.White)
-            .fillMaxHeight()
-            .fillMaxWidth()
-    ) {
+fun HomeScreen(homeState: HomeState, onEvent: ((HomeEvent) -> Unit), modifier: Modifier = Modifier) {
         Column(
             modifier = Modifier
                 .background(LColors.White)
@@ -143,10 +111,6 @@ fun HomeScreen(homeState: HomeState, onEvent: (HomeEvent) -> Unit, modifier: Mod
             AppGrid(homeState.myApp, homeState.allApp, homeState.news,
                 homeState.expanded, onSwitchClick = { onEvent(HomeEvent.OnAppSwitchClick) },
                 onAppItemClick = { onEvent(HomeEvent.OnAppItemClick(it)) })
-
-
-        }
-
     }
 
 }
@@ -187,16 +151,11 @@ fun TitleBar(
 
 }
 
-@Composable
-fun ElevatedButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
-    ElevatedButton(onClick = { onClick() }, modifier) {
-        Text("change Title")
-    }
-}
+
 
 @Composable
 fun AppGrid(
-    apps: List<CommonApp>,
+    apps: List<HybridApp>,
     hybridApps: List<TagWithHybridAppList>,
     newsData: List<String>,
     appSwitch: Boolean,
@@ -213,55 +172,38 @@ fun AppGrid(
             item { LBanner(bannerData = newsData) }
         }
         item {
-            ElevatedCard(
+            Card(
                 elevation = CardDefaults.cardElevation(
                     defaultElevation = 6.dp
                 ),
                 modifier = Modifier
-                    .padding(10.dp, 15.dp, 10.dp, 10.dp)
-                    .background(LColors.White)
+                    .padding(10.dp, 10.dp, 10.dp, 10.dp)
+
             ) {
-                val rowHeight = 75
-                val itemsPerRow = 4
-                val hybridHeight = hybridApps.sumOf {
-                    val itemCount = it.hybridAppList.size
-                    val rows = (itemCount + itemsPerRow - 1) / itemsPerRow
-                    rows * rowHeight + 35
-                }
-                val appHeight = ((apps.size + 1 + itemsPerRow - 1) / itemsPerRow)*75
-                Timber.e("hybridHeight %s appHeight = %s",hybridHeight,appHeight)
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(4),
+                MyAppGridColumn(
                     modifier = Modifier
-                        .padding(10.dp)
                         .fillMaxWidth()
-                        .height(if (apps.isEmpty()) hybridHeight.dp else (hybridHeight + appHeight).dp)
-                ) {
-                    if (apps.isNotEmpty()) {
-                        items(apps) { app ->
-                            MyApp(app, onAppItemClick)
-                        }
-                        item {
-                            AppSwitchBtn(switch = appSwitch, onClick = {
-                                onSwitchClick()
-                            })
-                        }
+                        .wrapContentHeight()
+                        .background(LColors.White),
+                    rowCount = 4,
+                    content = apps,
+                    hybridApps = hybridApps,
+                    appSwitch,
+                    onAppItemClick = onAppItemClick,
+                    onSwitchClick = onSwitchClick
+                )
 
-                    }
-
-                    if (hybridApps.isNotEmpty() && appSwitch) {
-                        hybridApps.forEach {
-                            item(span = { GridItemSpan(maxLineSpan) }) {
-                                CategoryHeader(it.tag)
-                            }
-                            items(it.hybridAppList) { app ->
-                                HybridAppUi(app, onAppItemClick)
-                            }
-                        }
-
-                    }
-                }
             }
+        }
+        item {
+            // TODO:  待办模块
+             Box(modifier = Modifier.fillMaxWidth().height(500.dp))
+             {
+                Timber.e("---------------- todo ")
+             }
+        }
+        item {
+            // TODO: 通知模块
         }
 
     }
@@ -269,15 +211,44 @@ fun AppGrid(
 
 }
 
+
+
+@Preview(showBackground = true)
 @Composable
-fun CategoryHeader(tag: TagApp) {
-    Text(
-        text = tag.tagName,
-        fontWeight = FontWeight.Bold,
-        fontSize = 16.sp,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp)
-            .height(30.dp)
+fun HomeScreen2()
+{
+    val jsonString = remember {
+        jsonData.plugdata
+    }
+
+    val previewData = remember {
+        Gson().fromJson(jsonString, ApiResponseEntity::class.java)
+    }
+
+    val tagWithHybridAppList: List<TagWithHybridAppList> = previewData.tagAppList.map { tagApp ->
+        TagWithHybridAppList(tagApp, tagApp.hybridAppList)
+    }
+    val tt=HomeState(
+        tenantName = "单位名称",
+        false,
+        myApp = previewData.commonAppList,
+        allApp = tagWithHybridAppList,
+        emptyList(),
+        listOf("3", "4"),
+        listOf("5", "6"),
+        expanded = true
     )
+    HomeScreen(tt, onEvent = { homeEvent ->
+        // 在这里处理 HomeEvent 对象
+        when (homeEvent) {
+            is HomeEvent.OnAppItemClick -> {
+                // 处理 OnAppItemClick 事件
+                val appItem = homeEvent.app
+                // 执行其他逻辑
+            }
+            // 处理其他事件...
+            else -> {}
+        }
+    }, modifier = Modifier)
 }
+
