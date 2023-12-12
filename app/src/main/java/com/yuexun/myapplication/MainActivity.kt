@@ -7,6 +7,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import com.yuexun.myapplication.ui.homeScreen.HomeScreen
+import com.yuexun.myapplication.ui.homeScreen.NewGridUI
 import com.yuexun.myapplication.ui.theme.MyApplicationTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -20,7 +21,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MyApplicationTheme(darkTheme = false) {
-                HomeScreen(homePageView.uiState(), homePageView::onEvent)
+                NewGridUI(homePageView.uiState(), homePageView::onEvent)
             }
         }
 
