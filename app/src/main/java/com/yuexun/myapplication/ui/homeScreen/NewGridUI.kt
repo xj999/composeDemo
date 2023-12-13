@@ -60,9 +60,9 @@ fun NewGridUI(homeState: HomeState, onEvent: ((HomeEvent) -> Unit), modifier: Mo
                             contentDescription = null,
                             modifier= Modifier
                                 .fillMaxWidth()
-                                .height(250.dp)
+                                .height(300.dp)
                                 .clip(shapes.medium),
-                            contentScale = ContentScale.FillHeight,
+                            contentScale = ContentScale.FillWidth,
                             placeholder = painterResource(id = R.drawable.baseline_qr_code_scanner_24)
 
                         )
@@ -229,3 +229,4 @@ fun NewGridUI2() {
         }
     }, modifier = Modifier)
 }
+

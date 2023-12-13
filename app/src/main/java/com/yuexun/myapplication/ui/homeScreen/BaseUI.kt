@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
@@ -20,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.yuexun.myapplication.R
+import timber.log.Timber
 
 @Composable
 fun BasePlugApp(
@@ -32,6 +34,9 @@ fun BasePlugApp(
     placeholder: Painter = painterResource(id = R.drawable.baseline_brightness_5_24)
 
 ) {
+    SideEffect {
+        Timber.e( "重组作用域 %s进行了重组",title)
+    }
     Column(modifier = modifier.clickable { onClick() }, horizontalAlignment = Alignment.CenterHorizontally) {
         if (imgUrl is String && imgUrl.startsWith("http")) {
             AsyncImage(
