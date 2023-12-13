@@ -25,6 +25,7 @@ abstract class ComposeViewModel<UiState, UiEvent> : ViewModel() {
     abstract fun onEvent(event: UiEvent)
 
     val workErrorH: MutableLiveData<Boolean> = MutableLiveData()
+
     val errorHandler = CoroutineExceptionHandler { _, exception ->
         Timber.e("CoroutineExceptionHandler got $exception")
         workErrorH.postValue(false)

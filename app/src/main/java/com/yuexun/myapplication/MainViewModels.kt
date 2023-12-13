@@ -72,7 +72,7 @@ class MainViewModels @Inject constructor(
                 mk.putBoolean(APP_SWITCH, expanded.value)
             }
             is HomeEvent.OnAppItemClick -> {
-                Timber.e("app click %s",event.app.toString())
+                Timber.e("app click %s",event.toString())
             }
         }
 

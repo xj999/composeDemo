@@ -23,6 +23,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
@@ -46,6 +48,8 @@ fun AppSwitchBtn(switch: Boolean, onClick: () -> Unit) {
     Column(
         Modifier
             .fillMaxWidth()
+            .height(75.dp)
+            .background(LColors.White)
             .clickable { onClick() }, horizontalAlignment = Alignment.CenterHorizontally
     ) {
         if (switch) {
@@ -53,20 +57,19 @@ fun AppSwitchBtn(switch: Boolean, onClick: () -> Unit) {
                 painter = painterResource(R.mipmap.retact_app_icon),
                 contentDescription = "Contact profile picture",
                 Modifier
-                    .size(50.dp)
-                    .padding(5.dp)
+                    .size(50.dp).padding(5.dp)
             )
-            Text(text = "收起", fontSize = 16.sp)
+            Text(text = "收起", fontSize = 16.sp,  maxLines = 1,
+                modifier = Modifier.align(CenterHorizontally))
         } else {
             Image(
                 painter = painterResource(R.mipmap.open_app_icon),
-                contentDescription = "Contact profile picture",
-                modifier = Modifier
-                    .size(50.dp)
-                    .padding(5.dp)
+                contentDescription = "Contact profile picture", modifier = Modifier
+                    .size(50.dp).padding(5.dp)
 //                    .clip(CircleShape)
             )
-            Text(text = "全部应用", fontSize = 16.sp)
+            Text(text = "全部应用", fontSize = 16.sp,  maxLines = 1,
+                modifier = Modifier.align(CenterHorizontally))
         }
     }
 
@@ -74,23 +77,27 @@ fun AppSwitchBtn(switch: Boolean, onClick: () -> Unit) {
 
 
 @Composable
-fun HybridAppUi(app: HybridApp, onAppItemClick: (Any) -> Unit) {
+fun HybridAppUi(app: HybridApp, onAppItemClick: (Any) -> Unit, modifier: Modifier = Modifier) {
+    LaunchedEffect(Unit) {
+        Timber.e("渲染了 %s  ", app.appName)
+    }
+    DisposableEffect(Unit) {
+        onDispose {
+            Timber.e("回收了 %s  ", app.appName)
+        }
+    }
     Column(
-        Modifier
+        modifier = modifier
             .fillMaxWidth()
-            .padding(5.dp)
             .height(75.dp)
-            .clickable { onAppItemClick(app) }, horizontalAlignment = Alignment.CenterHorizontally
+            .clickable { onAppItemClick(app) },
+        horizontalAlignment = Alignment.CenterHorizontally
 
     ) {
-//        GlideImage(
-//            model = app.appLogoUuid,
-//            contentDescription = null,
-//            Modifier.size(50.dp)
-//        )
         Image(
             painter = painterResource(R.drawable.baseline_qr_code_scanner_24),
-            contentDescription = "Contact profile picture", Modifier.size(50.dp)
+            contentDescription = "Contact profile picture",
+            Modifier.size(50.dp).padding(5.dp)
         )
         Text(
             text = app.appName.trim(),
@@ -103,26 +110,26 @@ fun HybridAppUi(app: HybridApp, onAppItemClick: (Any) -> Unit) {
 
 @Composable
 fun HomeScreen(homeState: HomeState, onEvent: ((HomeEvent) -> Unit), modifier: Modifier = Modifier) {
-    Scaffold (topBar = {
-        TitleBar(
-            showName = homeState.tenantName,
-            tenantSwitch = false,
-            onTenantSwitchClick = {},
-            onScanBtnClick = {})
+    Scaffold(topBar = {
+        TitleBar(showName = homeState.tenantName, tenantSwitch = false, onTenantSwitchClick = {}, onScanBtnClick = {})
     }, floatingActionButton = {
         FloatingActionButton(onClick = { onEvent(HomeEvent.OnNameBtnClick) }, shape = CircleShape) {
             Icon(Icons.Default.Add, contentDescription = "Add")
         }
-    }){
-        Column(
+    }) {
+        Box(
             modifier = Modifier
                 .background(LColors.White)
                 .fillMaxWidth()
+                .fillMaxWidth()
+                .padding(10.dp)
                 .padding(it)
-        )
-        {
-            AppGrid(homeState.myApp, homeState.allApp, homeState.news,
-                homeState.expanded, onSwitchClick = { onEvent(HomeEvent.OnAppSwitchClick) },
+        ) {
+            AppGrid(homeState.myApp,
+                homeState.allApp,
+                homeState.news,
+                homeState.expanded,
+                onSwitchClick = { onEvent(HomeEvent.OnAppSwitchClick) },
                 onAppItemClick = { onEvent(HomeEvent.OnAppItemClick(it)) })
         }
 
@@ -132,10 +139,7 @@ fun HomeScreen(homeState: HomeState, onEvent: ((HomeEvent) -> Unit), modifier: M
 
 @Composable
 fun TitleBar(
-    showName: String,
-    tenantSwitch: Boolean,
-    onTenantSwitchClick: () -> Unit,
-    onScanBtnClick: () -> Unit
+    showName: String, tenantSwitch: Boolean, onTenantSwitchClick: () -> Unit, onScanBtnClick: () -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -143,8 +147,7 @@ fun TitleBar(
             .padding(5.dp)
             .height(45.dp)
             .fillMaxWidth()
-    )
-    {
+    ) {
         Text(
             text = showName, modifier = Modifier
                 .align(Alignment.CenterStart)
@@ -152,8 +155,7 @@ fun TitleBar(
                 .wrapContentHeight()
         )
 
-        Image(
-            painter = painterResource(R.drawable.baseline_qr_code_scanner_24),
+        Image(painter = painterResource(R.drawable.baseline_qr_code_scanner_24),
             contentDescription = "Contact profile picture",
             Modifier
                 .size(35.dp)
@@ -167,73 +169,30 @@ fun TitleBar(
 }
 
 
-
 @Composable
 fun AppGrid(
-    apps: List<HybridApp>,
-    hybridApps: List<TagWithHybridAppList>,
-    newsData: List<String>,
-    appSwitch: Boolean,
-    onSwitchClick: () -> Unit,
-    onAppItemClick: (Any) -> Unit
+    apps: List<HybridApp>, hybridApps: List<TagWithHybridAppList>, newsData: List<String>, appSwitch: Boolean, onSwitchClick: () -> Unit, onAppItemClick: (Any) -> Unit
 ) {
-    LazyColumn(
+
+    MyAppGridColumn(
         modifier = Modifier
             .fillMaxWidth()
-            .fillMaxHeight()
-    ) {
-
-        if (newsData.isNotEmpty()) {
-            item { LBanner(bannerData = newsData) }
-        }
-        item {
-            Card(
-                elevation = CardDefaults.cardElevation(
-                    defaultElevation = 6.dp
-                ),
-                modifier = Modifier
-                    .padding(10.dp, 10.dp, 10.dp, 10.dp)
-
-            ) {
-                MyAppGridColumn(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .wrapContentHeight()
-                        .background(LColors.White),
-                    rowCount = 4,
-                    content = apps,
-                    hybridApps = hybridApps,
-                    appSwitch,
-                    onAppItemClick = onAppItemClick,
-                    onSwitchClick = onSwitchClick
-                )
-
-            }
-        }
-        item {
-            // TODO:  待办模块
-             Box(modifier = Modifier
-                 .fillMaxWidth()
-                 .height(500.dp))
-             {
-                Timber.e("---------------- todo ")
-             }
-        }
-        item {
-            // TODO: 通知模块
-        }
-
-    }
-
+            .wrapContentHeight(),
+        rowCount = 4,
+        content = apps,
+        hybridApps = hybridApps,
+        newsData,
+        appSwitch,
+        onAppItemClick = onAppItemClick,
+        onSwitchClick = onSwitchClick
+    )
 
 }
 
 
-
 @Preview(showBackground = true)
 @Composable
-fun HomeScreen2()
-{
+fun HomeScreen2() {
     val jsonString = remember {
         jsonData.plugdata
     }
@@ -245,15 +204,8 @@ fun HomeScreen2()
     val tagWithHybridAppList: List<TagWithHybridAppList> = previewData.tagAppList.map { tagApp ->
         TagWithHybridAppList(tagApp, tagApp.hybridAppList)
     }
-    val tt=HomeState(
-        tenantName = "单位名称",
-        false,
-        myApp = previewData.commonAppList,
-        allApp = tagWithHybridAppList,
-        emptyList(),
-        listOf("3", "4"),
-        listOf("5", "6"),
-        expanded = true
+    val tt = HomeState(
+        tenantName = "单位名称", false, myApp = previewData.commonAppList, allApp = tagWithHybridAppList, emptyList(), listOf("3", "4"), listOf("5", "6"), expanded = true
     )
     HomeScreen(tt, onEvent = { homeEvent ->
         // 在这里处理 HomeEvent 对象
