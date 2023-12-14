@@ -15,9 +15,11 @@ import com.yuexun.myapplication.app.Constants.TENANT_NAME
 import com.yuexun.myapplication.ui.homeScreen.HomeEvent
 import com.yuexun.myapplication.ui.homeScreen.HomeState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.time.LocalDateTime
 import javax.inject.Inject
@@ -80,21 +82,25 @@ class MainViewModels @Inject constructor(
 
     private fun start() {
         viewModelScope.launch(errorHandlerMessage) {
-           try {
-               hybridAppRepository.fetchRemoteAppData()
-           } catch (e: Exception) {
-               e.printStackTrace()
-           }
+            withContext(Dispatchers.IO)
+            {
+                try {
+                    hybridAppRepository.fetchRemoteAppData()
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
 
-            tenantName.value = mk.getString(TENANT_NAME, "testCompany").toString()
-            expanded.value = mk.getBoolean(APP_SWITCH, false)
-            val commonAppsFlow = hybridAppRepository.getLocalMyApps()
-            val hybridAppsFlow = hybridAppRepository.getAllTagWithHybridApps()
+                tenantName.value = mk.getString(TENANT_NAME, "testCompany").toString()
+                expanded.value = mk.getBoolean(APP_SWITCH, false)
+                val commonAppsFlow = hybridAppRepository.getLocalMyApps()
+                val hybridAppsFlow = hybridAppRepository.getAllTagWithHybridApps()
 
-            combine(commonAppsFlow, hybridAppsFlow) { commonApps, hybrid ->
-                myApps.value = commonApps
-                hybridApps.value = hybrid
-            }.collect()
+                combine(commonAppsFlow, hybridAppsFlow) { commonApps, hybrid ->
+                    myApps.value = commonApps
+                    hybridApps.value = hybrid
+                }.collect()
+            }
+
         }
     }
 

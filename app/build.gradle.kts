@@ -29,28 +29,27 @@ android {
             }
         }
     }
-//    signingConfigs {
-//        getByName("debug") {
-//            storeFile = file("../lapp.jks")
-//            storePassword = "498002079"
-//            keyAlias = "lapp"
-//            keyPassword = "498002079"
-//        }
-//
-//        create("release") {
-//            storeFile = file("../lapp.jks")
-//            storePassword = "498002079"
-//            keyAlias = "lapp"
-//            keyPassword = "498002079"
-//        }
-//    }
+    signingConfigs {
+        getByName("debug") {
+            storeFile = file("../lapp.jks")
+            storePassword = "498002079"
+            keyAlias = "lapp"
+            keyPassword = "498002079"
+        }
+
+        create("release") {
+            storeFile = file("../lapp.jks")
+            storePassword = "498002079"
+            keyAlias = "lapp"
+            keyPassword = "498002079"
+        }
+    }
 
     buildTypes {
         release {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-            signingConfig = signingConfigs.getByName("debug")
-//            signingConfig = signingConfigs.getByName("release")
+            signingConfig = signingConfigs.getByName("release")
         }
 
     }

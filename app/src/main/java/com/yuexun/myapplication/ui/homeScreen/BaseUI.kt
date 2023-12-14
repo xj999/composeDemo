@@ -35,24 +35,25 @@ fun BasePlugApp(
 
 ) {
     SideEffect {
-        Timber.e( "重组作用域 %s进行了重组",title)
     }
     Column(modifier = modifier.clickable { onClick() }, horizontalAlignment = Alignment.CenterHorizontally) {
         if (imgUrl is String && imgUrl.startsWith("http")) {
             AsyncImage(
                 model = imgUrl,
-                contentDescription = null,
+                contentDescription = "imgUrl",
                 Modifier
                     .size(imgSize)
                     .padding(5.dp),
+                error = placeholder,
                 placeholder = placeholder,
-                contentScale = ContentScale.Crop
-            )
+                contentScale = ContentScale.Crop,
+
+                )
         } else {
 
             Image(
                 painter = if (imgUrl is Painter) imgUrl else placeholder,
-                contentDescription = null,
+                contentDescription = "imgUrl",
                 Modifier
                     .size(imgSize)
                     .padding(5.dp),

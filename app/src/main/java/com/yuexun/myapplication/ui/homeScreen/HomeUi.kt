@@ -57,19 +57,25 @@ fun AppSwitchBtn(switch: Boolean, onClick: () -> Unit) {
                 painter = painterResource(R.mipmap.retact_app_icon),
                 contentDescription = "Contact profile picture",
                 Modifier
-                    .size(50.dp).padding(5.dp)
+                    .size(50.dp)
+                    .padding(5.dp)
             )
-            Text(text = "收起", fontSize = 16.sp,  maxLines = 1,
-                modifier = Modifier.align(CenterHorizontally))
+            Text(
+                text = "收起", fontSize = 16.sp, maxLines = 1,
+                modifier = Modifier.align(CenterHorizontally)
+            )
         } else {
             Image(
                 painter = painterResource(R.mipmap.open_app_icon),
                 contentDescription = "Contact profile picture", modifier = Modifier
-                    .size(50.dp).padding(5.dp)
+                    .size(50.dp)
+                    .padding(5.dp)
 //                    .clip(CircleShape)
             )
-            Text(text = "全部应用", fontSize = 16.sp,  maxLines = 1,
-                modifier = Modifier.align(CenterHorizontally))
+            Text(
+                text = "全部应用", fontSize = 16.sp, maxLines = 1,
+                modifier = Modifier.align(CenterHorizontally)
+            )
         }
     }
 
@@ -97,7 +103,9 @@ fun HybridAppUi(app: HybridApp, onAppItemClick: (Any) -> Unit, modifier: Modifie
         Image(
             painter = painterResource(R.drawable.baseline_qr_code_scanner_24),
             contentDescription = "Contact profile picture",
-            Modifier.size(50.dp).padding(5.dp)
+            Modifier
+                .size(50.dp)
+                .padding(5.dp)
         )
         Text(
             text = app.appName.trim(),
@@ -110,30 +118,22 @@ fun HybridAppUi(app: HybridApp, onAppItemClick: (Any) -> Unit, modifier: Modifie
 
 @Composable
 fun HomeScreen(homeState: HomeState, onEvent: ((HomeEvent) -> Unit), modifier: Modifier = Modifier) {
-    Scaffold(topBar = {
-        TitleBar(showName = homeState.tenantName, tenantSwitch = false, onTenantSwitchClick = {}, onScanBtnClick = {})
-    }, floatingActionButton = {
-        FloatingActionButton(onClick = { onEvent(HomeEvent.OnNameBtnClick) }, shape = CircleShape) {
-            Icon(Icons.Default.Add, contentDescription = "Add")
-        }
-    }) {
-        Box(
-            modifier = Modifier
-                .background(LColors.White)
-                .fillMaxWidth()
-                .fillMaxWidth()
-                .padding(10.dp)
-                .padding(it)
-        ) {
-            AppGrid(homeState.myApp,
-                homeState.allApp,
-                homeState.news,
-                homeState.expanded,
-                onSwitchClick = { onEvent(HomeEvent.OnAppSwitchClick) },
-                onAppItemClick = { onEvent(HomeEvent.OnAppItemClick(it)) })
-        }
+    Box(
+        modifier = modifier
+            .background(LColors.White)
+            .fillMaxWidth()
+            .fillMaxWidth()
+            .padding(10.dp)
 
+    ) {
+        AppGrid(homeState.myApp,
+            homeState.allApp,
+            homeState.news,
+            homeState.expanded,
+            onSwitchClick = { onEvent(HomeEvent.OnAppSwitchClick) },
+            onAppItemClick = { onEvent(HomeEvent.OnAppItemClick(it)) })
     }
+
 
 }
 
