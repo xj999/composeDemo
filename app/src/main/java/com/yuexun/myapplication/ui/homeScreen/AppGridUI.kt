@@ -251,7 +251,6 @@ fun CategoryHeader(tag: TagApp) {
         fontSize = 16.sp,
         modifier = Modifier
             .fillMaxWidth()
-            .background(LColors.White)
             .fillMaxHeight()
     )
 }

@@ -16,6 +16,8 @@ import com.yuexun.myapplication.ui.homeScreen.HomeEvent
 import com.yuexun.myapplication.ui.homeScreen.HomeState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
@@ -39,7 +41,12 @@ class MainViewModels @Inject constructor(
 
     private val mk = MMKV.defaultMMKV()
 
-
+    init{
+        viewModelScope.launch {
+            Timber.e("-----------------------------------------")
+            hybridAppRepository.fetchRemoteAppData()
+        }
+    }
     @Composable
     override fun uiState(): HomeState {
         LaunchedEffect(Unit) {
@@ -68,43 +75,44 @@ class MainViewModels @Inject constructor(
 //                    hybridAppRepository.saveMyAPP(com.midai.data.db.entity.generateTestData())
                 }
             }
+
             is HomeEvent.OnAppSwitchClick -> {
                 Timber.e("switch click -----------------------")
                 expanded.value = !expanded.value
                 mk.putBoolean(APP_SWITCH, expanded.value)
             }
+
             is HomeEvent.OnAppItemClick -> {
-                Timber.e("app click %s",event.toString())
+                if (event.app is HybridApp) {
+                    Timber.e("app click %s", event.app.appName)
+                }
+
+            }
+
+            is HomeEvent.OnScanClick -> {
+                Timber.e("OnScanClick   %s", event.toString())
             }
         }
 
     }
 
     private fun start() {
+
         viewModelScope.launch(errorHandlerMessage) {
-            withContext(Dispatchers.IO)
-            {
-                try {
-                    hybridAppRepository.fetchRemoteAppData()
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-
-                tenantName.value = mk.getString(TENANT_NAME, "testCompany").toString()
-                expanded.value = mk.getBoolean(APP_SWITCH, false)
-                val commonAppsFlow = hybridAppRepository.getLocalMyApps()
-                val hybridAppsFlow = hybridAppRepository.getAllTagWithHybridApps()
-
-                combine(commonAppsFlow, hybridAppsFlow) { commonApps, hybrid ->
-                    myApps.value = commonApps
-                    hybridApps.value = hybrid
-                }.collect()
-            }
-
+            Timber.e("===========================================")
+            tenantName.value = mk.getString(TENANT_NAME, "testCompany").toString()
+            expanded.value = mk.getBoolean(APP_SWITCH, false)
+            val commonAppsFlow = hybridAppRepository.getLocalMyApps()
+            val hybridAppsFlow = hybridAppRepository.getAllTagWithHybridApps()
+            Timber.e("  22222222222222222222222")
+            combine(commonAppsFlow, hybridAppsFlow) { commonApps, hybrid ->
+                myApps.value = commonApps
+                hybridApps.value = hybrid
+                Timber.e("  3333333333333333333333333")
+            }.collect()
         }
+
     }
-
-
 
 
 }

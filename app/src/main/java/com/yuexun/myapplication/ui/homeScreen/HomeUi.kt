@@ -49,7 +49,6 @@ fun AppSwitchBtn(switch: Boolean, onClick: () -> Unit) {
         Modifier
             .fillMaxWidth()
             .height(75.dp)
-            .background(LColors.White)
             .clickable { onClick() }, horizontalAlignment = Alignment.CenterHorizontally
     ) {
         if (switch) {

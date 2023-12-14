@@ -30,7 +30,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            MyApplicationTheme(darkTheme = false) {
+            MyApplicationTheme( darkTheme = false, dynamicColor = true) {
                 MainScreen(homePageView)
             }
         }
