@@ -12,12 +12,12 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountBox
-import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.Email
@@ -92,8 +92,8 @@ fun MainScreen(viewModel: MainViewModels = viewModel()) {
     val onEvent = viewModel::onEvent
     val bottomBtnList = listOf("grid渲染", "column渲染", "空页面", "未实现")
     val iconList = listOf(
-        Icons.Default.AccountBox,
-        Icons.Default.AccountCircle,
+        ImageVector.vectorResource(id = R.drawable.grid_view),
+        ImageVector.vectorResource(id = R.drawable.table_rows),
         Icons.Default.Call,
         Icons.Default.Email
     )
@@ -154,9 +154,10 @@ fun MainScreen(viewModel: MainViewModels = viewModel()) {
             }
         }
     ) {
+        val state = rememberLazyGridState()
         when (selectIndex) {
             0 -> {
-                Screen1(homeState, onEvent, modifier = Modifier.padding(it))
+                Screen1(homeState, onEvent, state, modifier = Modifier.padding(it))
             }
 
             1 -> {
@@ -181,8 +182,9 @@ fun MainScreen(viewModel: MainViewModels = viewModel()) {
 }
 
 @Composable
-fun Screen1(homeState: HomeState, onEvent: ((HomeEvent) -> Unit), modifier: Modifier = Modifier) {
+fun Screen1(homeState: HomeState, onEvent: ((HomeEvent) -> Unit), state: LazyGridState, modifier: Modifier = Modifier) {
     LazyVerticalGrid(
+        state = state,
         columns = GridCells.Fixed(4), content = {
 
             if (homeState.news.isNotEmpty()) {
@@ -357,6 +359,6 @@ fun NewGridUI2() {
         expanded = false
     )
     Screen1(tt, onEvent = {
-    }, modifier = Modifier)
+    }, rememberLazyGridState(), modifier = Modifier)
 }
 
